@@ -2,3 +2,5 @@
 redenlab-be/.env
 redenlab-be/node_modules/*
 redenlab-be/.idea/*
+redenlab-fe/node_modules/*
+redenlab-fe/.idea/*
