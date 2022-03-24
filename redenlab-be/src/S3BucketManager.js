@@ -9,31 +9,42 @@ function S3BucketManager() {
     }
 
     async function pushObject(bucketName, filename, content, contentType) {
-        const s3 = new AWS.S3()
-        const params = {
-            Bucket: bucketName,
-            Key: filename,
-            Body: content,
-            ContentEncoding: 'base64',
-            ContentType: contentType
+        try {
+            const s3 = new AWS.S3()
+            const params = {
+                Bucket: bucketName,
+                Key: filename,
+                Body: content,
+                ContentEncoding: 'base64',
+                ContentType: contentType
+            }
+
+            const prom = s3.putObject(params).promise();
+            prom.then(function (data, error) {
+                if (error)
+                    console.error(error)
+                else
+                    console.info('Uploaded object')
+            })
+        } catch(e) {
+            console.error(e)
         }
 
-        const prom = s3.putObject(params).promise();
-        prom.then(function (data, error) {
-            if (error)
-                console.error(error)
-            else
-                console.info('Uploaded object')
-        })
     }
 
     async function listObjects(bucketName, objects = []) {
-        const s3 = new AWS.S3()
-        const response = await s3.listObjectsV2({ Bucket: bucketName}).promise();
+        try {
+            const s3 = new AWS.S3()
+            const response = await s3.listObjectsV2({ Bucket: bucketName}).promise();
 
-        response.Contents.forEach(obj => objects.push(obj));
+            response.Contents.forEach(obj => objects.push(obj));
 
-        return objects;
+            return objects;
+        } catch(e) {
+            console.error(e)
+        }
+
+        return []
     }
 
     return {
